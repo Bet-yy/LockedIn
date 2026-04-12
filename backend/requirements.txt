@@ -1,0 +1,8 @@
+fastapi
+uvicorn[standard]
+httpx
+google-genai
+supabase==2.9.1
+pypdf
+pydantic-settings
+python-dotenv
