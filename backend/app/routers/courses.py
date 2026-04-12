@@ -26,6 +26,17 @@ async def save_course(
     body: SaveCourseRequest,
     guest_id: Optional[str] = Depends(get_guest_id),
 ):
+    # Enrich with professor name if missing (skipped during fast search)
+    if not body.professor and body.nebula_course_id:
+        try:
+            from app.services.nebula import _get_sections_for_course, _resolve_professor_from_sections
+            sections = await _get_sections_for_course(body.nebula_course_id)
+            professor = await _resolve_professor_from_sections(sections)
+            if professor:
+                body = body.model_copy(update={"professor": professor})
+        except Exception:
+            pass
+
     from app.services.supabase_client import save_course
     return await save_course(body, guest_id)
 

@@ -163,7 +163,12 @@ export function CoursesPage() {
         {/* Search */}
         <div className="space-y-4">
           <div className="glass-panel p-5">
-            <SearchBar value={query} onChange={setQuery} />
+            <SearchBar
+              value={query}
+              onChange={setQuery}
+              suggestions={searchResults}
+              isLoading={isSearching}
+            />
             {isSaving && <div className="mt-4"><LoadingSpinner label="Saving course…" compact /></div>}
             {searchError && <div className="mt-4"><ErrorBanner message={searchError} /></div>}
           </div>

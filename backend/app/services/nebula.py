@@ -13,20 +13,34 @@ def _headers() -> dict:
 
 def _parse_query(query: str) -> dict:
     """
-    'CS 3345' / 'CS3345' -> {subject_prefix, course_number}
-    'algorithms'         -> {title}
+    'CS 3345' / 'CS3345'  -> {subject_prefix, course_number}
+    'CS 3' / 'CS 33'      -> {subject_prefix, number_prefix}
+    'CS' / 'PHIL'         -> {subject_prefix}
+    'algorithms'           -> {title}
     """
-    match = re.match(r"^([A-Za-z]{2,4})\s*(\d{4})$", query.strip())
+    q = query.strip()
+    # Exact course: "CS 3345" or "CS3345"
+    match = re.match(r"^([A-Za-z]{2,4})\s*(\d{4})$", q)
     if match:
-        return {
-            "subject_prefix": match.group(1).upper(),
-            "course_number": match.group(2),
-        }
-    return {"title": query.strip()}
+        return {"subject_prefix": match.group(1).upper(), "course_number": match.group(2)}
+
+    # Subject + partial number: "CS 3", "CS 33", "CS 334"
+    # Pass course_number directly to Nebula so it filters server-side
+    partial = re.match(r"^([A-Za-z]{2,4})\s+(\d{1,3})$", q)
+    if partial:
+        return {"subject_prefix": partial.group(1).upper(), "course_number": partial.group(2)}
+
+    # Subject prefix only: "CS", "PHIL", "MATH"
+    subject = re.match(r"^([A-Za-z]{2,4})$", q)
+    if subject:
+        return {"subject_prefix": subject.group(1).upper()}
+
+    return {"title": q}
 
 
 async def search_courses(query: str, semester: Optional[str] = None) -> List[CourseSearchResult]:
-    params = {**_parse_query(query), "offset": 0}
+    parsed = _parse_query(query)
+    params = {**parsed, "offset": 0}
 
     async with httpx.AsyncClient() as client:
         resp = await client.get(
@@ -42,12 +56,9 @@ async def search_courses(query: str, semester: Optional[str] = None) -> List[Cou
     if not isinstance(courses, list):
         courses = [courses]
 
-    results = []
-    for c in courses[:20]:
-        sections = await _get_sections_for_course(c.get("_id", ""))
-        professor = await _resolve_professor_from_sections(sections)
-        results.append(_course_to_result(c, sections, semester, professor))
-    return results
+    # Return basic course info only — skipping per-course section/professor lookups
+    # keeps search suggestions fast (1 API call instead of 40+)
+    return [_course_to_result(c, [], semester, None) for c in courses[:20]]
 
 
 async def get_course_by_id(course_id: str) -> CourseSearchResult:
