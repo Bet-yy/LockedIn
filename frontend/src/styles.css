@@ -5,11 +5,8 @@
 @tailwind utilities;
 
 :root {
-  color: #f7f4e8;
-  background:
-    radial-gradient(circle at top left, rgba(18, 199, 255, 0.22), transparent 32%),
-    radial-gradient(circle at top right, rgba(255, 101, 65, 0.18), transparent 30%),
-    linear-gradient(180deg, #08111f 0%, #0b1627 48%, #101d31 100%);
+  color: #1a1a2e;
+  background: #f8f7ff;
   font-family: 'DM Sans', sans-serif;
 }
 
@@ -25,7 +22,8 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  color: #f7f4e8;
+  color: #1a1a2e;
+  background: #f8f7ff;
 }
 
 #root {
@@ -45,14 +43,27 @@ textarea {
 }
 
 ::selection {
-  background: rgba(87, 216, 255, 0.35);
-  color: #ffffff;
+  background: rgba(139, 92, 246, 0.25);
+  color: #1a1a2e;
 }
 
+/* Light card panels (replaces old dark glass-panel) */
 .glass-panel {
-  @apply rounded-3xl border border-white/10 bg-white/5 shadow-glow backdrop-blur-xl;
+  @apply rounded-2xl border border-gray-200 bg-white shadow-card;
 }
 
 .section-label {
-  @apply text-xs font-semibold uppercase tracking-[0.28em] text-cyan-300/85;
+  @apply text-xs font-semibold uppercase tracking-[0.22em] text-violet-600;
+}
+
+/* Sidebar scrollbar */
+.sidebar-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+.sidebar-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.sidebar-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
 }

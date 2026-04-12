@@ -11,6 +11,11 @@ interface TaskFormProps {
   submitLabel: string;
 }
 
+const inputClass =
+  'w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm text-gray-800 outline-none placeholder:text-gray-400 focus:border-violet-400 focus:ring-2 focus:ring-violet-100';
+
+const labelClass = 'mb-1.5 block text-xs font-semibold uppercase tracking-wide text-gray-500';
+
 export function TaskForm({ initialTask, courses, onSubmit, onCancel, submitLabel }: TaskFormProps) {
   const [title, setTitle] = useState(initialTask?.title ?? '');
   const [description, setDescription] = useState(initialTask?.description ?? '');
@@ -29,10 +34,7 @@ export function TaskForm({ initialTask, courses, onSubmit, onCancel, submitLabel
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!title.trim()) {
-      return;
-    }
-
+    if (!title.trim()) return;
     setIsSubmitting(true);
     try {
       const wasSuccessful = await onSubmit({
@@ -42,7 +44,6 @@ export function TaskForm({ initialTask, courses, onSubmit, onCancel, submitLabel
         priority: priority || null,
         course_id: courseId || null,
       });
-
       if (wasSuccessful && !initialTask) {
         setTitle('');
         setDescription('');
@@ -57,45 +58,45 @@ export function TaskForm({ initialTask, courses, onSubmit, onCancel, submitLabel
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="grid gap-4 md:grid-cols-2">
-        <label className="block md:col-span-2">
-          <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-sand-200/62">Title</span>
-          <input
-            type="text"
-            value={title}
-            onChange={(event) => setTitle(event.target.value)}
-            placeholder="Ex: Review hash tables lecture"
-            className="w-full rounded-[1.5rem] border border-white/10 bg-ink-950/80 px-4 py-4 text-sm text-sand-100 outline-none placeholder:text-sand-200/45"
-          />
-        </label>
+      <label className="block">
+        <span className={labelClass}>Title</span>
+        <input
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="Ex: Review hash tables lecture"
+          className={inputClass}
+        />
+      </label>
 
-        <label className="block md:col-span-2">
-          <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-sand-200/62">Description</span>
-          <textarea
-            value={description}
-            onChange={(event) => setDescription(event.target.value)}
-            rows={4}
-            placeholder="Optional notes, assignment details, or study goal"
-            className="w-full rounded-[1.5rem] border border-white/10 bg-ink-950/80 px-4 py-4 text-sm text-sand-100 outline-none placeholder:text-sand-200/45"
-          />
-        </label>
+      <label className="block">
+        <span className={labelClass}>Description</span>
+        <textarea
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          rows={3}
+          placeholder="Optional notes, assignment details, or study goal"
+          className={`${inputClass} resize-none`}
+        />
+      </label>
 
+      <div className="grid grid-cols-2 gap-3">
         <label className="block">
-          <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-sand-200/62">Due date</span>
+          <span className={labelClass}>Due Date</span>
           <input
             type="date"
             value={dueDate}
-            onChange={(event) => setDueDate(event.target.value)}
-            className="w-full rounded-full border border-white/10 bg-ink-950/80 px-4 py-3 text-sm text-sand-100 outline-none"
+            onChange={(e) => setDueDate(e.target.value)}
+            className={inputClass}
           />
         </label>
 
         <label className="block">
-          <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-sand-200/62">Priority</span>
+          <span className={labelClass}>Priority</span>
           <select
             value={priority}
-            onChange={(event) => setPriority(event.target.value as TaskPriority | '')}
-            className="w-full rounded-full border border-white/10 bg-ink-950/80 px-4 py-3 text-sm text-sand-100 outline-none"
+            onChange={(e) => setPriority(e.target.value as TaskPriority | '')}
+            className={inputClass}
           >
             <option value="">No priority</option>
             <option value="low">Low</option>
@@ -103,41 +104,41 @@ export function TaskForm({ initialTask, courses, onSubmit, onCancel, submitLabel
             <option value="high">High</option>
           </select>
         </label>
-
-        <label className="block md:col-span-2">
-          <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-sand-200/62">Linked course</span>
-          <select
-            value={courseId}
-            onChange={(event) => setCourseId(event.target.value)}
-            className="w-full rounded-full border border-white/10 bg-ink-950/80 px-4 py-3 text-sm text-sand-100 outline-none"
-          >
-            <option value="">No course</option>
-            {courses.map((course) => (
-              <option key={course.id} value={course.id}>
-                {course.course_number} - {course.course_name}
-              </option>
-            ))}
-          </select>
-        </label>
       </div>
 
-      <div className="flex flex-wrap gap-3">
+      <label className="block">
+        <span className={labelClass}>Linked Course</span>
+        <select
+          value={courseId}
+          onChange={(e) => setCourseId(e.target.value)}
+          className={inputClass}
+        >
+          <option value="">No course</option>
+          {courses.map((course) => (
+            <option key={course.id} value={course.id}>
+              {course.course_number} – {course.course_name}
+            </option>
+          ))}
+        </select>
+      </label>
+
+      <div className="flex flex-wrap gap-2 pt-1">
         <button
           type="submit"
           disabled={isSubmitting}
-          className="rounded-full bg-coral-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-coral-400 disabled:cursor-not-allowed disabled:opacity-60"
+          className="rounded-xl bg-violet-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {isSubmitting ? 'Saving...' : submitLabel}
+          {isSubmitting ? 'Saving…' : submitLabel}
         </button>
-        {onCancel ? (
+        {onCancel && (
           <button
             type="button"
             onClick={onCancel}
-            className="rounded-full border border-white/10 bg-white/5 px-5 py-3 text-sm font-semibold text-sand-100 transition hover:bg-white/10"
+            className="rounded-xl border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-600 transition hover:bg-gray-50"
           >
             Cancel
           </button>
-        ) : null}
+        )}
       </div>
     </form>
   );

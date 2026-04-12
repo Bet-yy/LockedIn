@@ -33,55 +33,35 @@ export function TimerSettings({ workDuration, shortBreak, longBreak, onSave }: T
   }
 
   return (
-    <div className="glass-panel p-6">
-      <div className="flex items-end justify-between gap-4">
-        <div>
-          <p className="section-label">Timer Settings</p>
-          <h2 className="mt-3 font-display text-2xl font-semibold text-sand-100">Tune your rhythm</h2>
-        </div>
+    <div className="glass-panel p-5">
+      <div className="flex items-center justify-between gap-4">
+        <p className="section-label">Timer Settings</p>
         <button
           type="button"
           onClick={handleSave}
-          className="rounded-full border border-white/10 bg-white/5 px-5 py-3 text-sm font-semibold text-sand-100 transition hover:bg-white/10"
+          className="rounded-xl bg-violet-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-violet-700"
         >
-          Save durations
+          Save
         </button>
       </div>
-      <div className="mt-5 grid gap-4 md:grid-cols-3">
-        <label className="block">
-          <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-sand-200/62">Work</span>
-          <input
-            type="number"
-            min={1}
-            value={workMinutes}
-            onChange={(event) => setWorkMinutes(Math.max(1, Number(event.target.value) || 1))}
-            className="w-full rounded-full border border-white/10 bg-ink-950/80 px-4 py-3 text-sm text-sand-100 outline-none"
-          />
-        </label>
-        <label className="block">
-          <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-sand-200/62">Short Break</span>
-          <input
-            type="number"
-            min={1}
-            value={shortBreakMinutes}
-            onChange={(event) => setShortBreakMinutes(Math.max(1, Number(event.target.value) || 1))}
-            className="w-full rounded-full border border-white/10 bg-ink-950/80 px-4 py-3 text-sm text-sand-100 outline-none"
-          />
-        </label>
-        <label className="block">
-          <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-sand-200/62">Long Break</span>
-          <input
-            type="number"
-            min={1}
-            value={longBreakMinutes}
-            onChange={(event) => setLongBreakMinutes(Math.max(1, Number(event.target.value) || 1))}
-            className="w-full rounded-full border border-white/10 bg-ink-950/80 px-4 py-3 text-sm text-sand-100 outline-none"
-          />
-        </label>
+      <div className="mt-4 grid grid-cols-3 gap-3">
+        {[
+          { label: 'Work (min)', value: workMinutes, setter: setWorkMinutes },
+          { label: 'Short Break', value: shortBreakMinutes, setter: setShortBreakMinutes },
+          { label: 'Long Break', value: longBreakMinutes, setter: setLongBreakMinutes },
+        ].map(({ label, value, setter }) => (
+          <label key={label} className="block">
+            <span className="mb-1.5 block text-[11px] font-semibold uppercase tracking-wide text-gray-400">{label}</span>
+            <input
+              type="number"
+              min={1}
+              value={value}
+              onChange={(e) => setter(Math.max(1, Number(e.target.value) || 1))}
+              className="w-full rounded-xl border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-800 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100"
+            />
+          </label>
+        ))}
       </div>
-      <p className="mt-4 text-sm leading-6 text-sand-200/68">
-        Settings are persisted locally so the timer keeps your preferred rhythm between visits.
-      </p>
     </div>
   );
 }
