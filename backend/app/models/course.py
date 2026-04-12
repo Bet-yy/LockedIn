@@ -21,6 +21,13 @@ class SaveCourseRequest(BaseModel):
     syllabus_url: Optional[str] = None
 
 
+class UpdateCourseRequest(BaseModel):
+    course_name: Optional[str] = None
+    course_number: Optional[str] = None
+    professor: Optional[str] = None
+    semester: Optional[str] = None
+
+
 class SavedCourse(BaseModel):
     id: str
     nebula_course_id: str

@@ -22,10 +22,7 @@ export function StudyPlanPanel({ plan, isLoading, error, onGenerate }: StudyPlan
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="section-label">AI Study Plan</p>
-            <h2 className="mt-1 font-display text-lg font-semibold text-gray-900">Translate the syllabus into weekly execution</h2>
-            <p className="mt-1 max-w-2xl text-sm text-gray-500">
-              Generate a study rhythm from the parsed syllabus to move from course overview to specific weekly commitments.
-            </p>
+            <h2 className="mt-1 font-display text-lg font-semibold text-gray-900">Study Plan</h2>
           </div>
           <div className="flex items-end gap-3">
             <label className="block">

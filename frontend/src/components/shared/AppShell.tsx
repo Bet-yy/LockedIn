@@ -1,4 +1,5 @@
 import { Outlet } from 'react-router-dom';
+import { ErrorBoundary } from './ErrorBoundary';
 import { Sidebar } from './Sidebar';
 
 export function AppShell() {
@@ -7,7 +8,9 @@ export function AppShell() {
       <Sidebar />
       <main className="ml-64 flex-1 overflow-y-auto">
         <div className="mx-auto max-w-5xl px-8 py-8">
-          <Outlet />
+          <ErrorBoundary>
+            <Outlet />
+          </ErrorBoundary>
         </div>
       </main>
     </div>

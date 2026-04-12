@@ -22,6 +22,7 @@ interface CourseStoreState {
   setSelectedCourse: (course: CourseSearchResult | SavedCourse | null) => void;
   setSavedCourses: (courses: SavedCourse[]) => void;
   upsertSavedCourse: (course: SavedCourse) => void;
+  removeSavedCourse: (courseId: string) => void;
   setIsSearching: (value: boolean) => void;
   setSearchError: (value: string | null) => void;
   setLastQuery: (value: string) => void;
@@ -59,6 +60,11 @@ export const useCourseStore = create<CourseStoreState>((set) => ({
     set((state) => ({
       savedCourses: [course, ...state.savedCourses.filter((item) => item.id !== course.id)],
       selectedCourse: course,
+    })),
+  removeSavedCourse: (courseId) =>
+    set((state) => ({
+      savedCourses: state.savedCourses.filter((item) => item.id !== courseId),
+      selectedCourse: state.selectedCourse && 'id' in state.selectedCourse && (state.selectedCourse as SavedCourse).id === courseId ? null : state.selectedCourse,
     })),
   setIsSearching: (value) => set({ isSearching: value }),
   setSearchError: (value) => set({ searchError: value }),

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, Query
 from typing import List, Optional
-from app.models.course import CourseSearchResult, SaveCourseRequest, SavedCourse
+from app.models.course import CourseSearchResult, SaveCourseRequest, SavedCourse, UpdateCourseRequest
 from app.core.dependencies import get_guest_id
 
 router = APIRouter()
@@ -28,6 +28,26 @@ async def save_course(
 ):
     from app.services.supabase_client import save_course
     return await save_course(body, guest_id)
+
+
+@router.put("/saved/{course_id}", response_model=SavedCourse)
+async def update_saved_course(
+    course_id: str,
+    body: UpdateCourseRequest,
+    guest_id: Optional[str] = Depends(get_guest_id),
+):
+    from app.services.supabase_client import update_saved_course
+    updates = body.model_dump(exclude_none=True)
+    return await update_saved_course(course_id, updates)
+
+
+@router.delete("/saved/{course_id}", status_code=204)
+async def delete_saved_course(
+    course_id: str,
+    guest_id: Optional[str] = Depends(get_guest_id),
+):
+    from app.services.supabase_client import delete_saved_course
+    await delete_saved_course(course_id)
 
 
 @router.get("/{course_id}", response_model=CourseSearchResult)

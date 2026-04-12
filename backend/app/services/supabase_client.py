@@ -43,6 +43,17 @@ async def get_saved_course_by_id(course_id: str) -> dict:
     return resp.data
 
 
+async def update_saved_course(course_id: str, updates: dict) -> dict:
+    client = _get_client()
+    resp = client.table("saved_courses").update(updates).eq("id", course_id).execute()
+    return resp.data[0]
+
+
+async def delete_saved_course(course_id: str):
+    client = _get_client()
+    client.table("saved_courses").delete().eq("id", course_id).execute()
+
+
 async def update_syllabus_parsed(course_id: str, raw_text: str, parsed: Any):
     client = _get_client()
     client.table("saved_courses").update({

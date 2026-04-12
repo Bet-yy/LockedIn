@@ -14,17 +14,45 @@ function renderObjectList(items: Record<string, string>) {
 }
 
 export function ParsedSyllabusCard({ data }: ParsedSyllabusCardProps) {
-  const topics = Array.isArray(data.topics_by_week) ? (data.topics_by_week as SyllabusTopicWeek[]) : [];
-  const exams = Array.isArray(data.exam_dates) ? (data.exam_dates as SyllabusExamDate[]) : [];
+  const topics: SyllabusTopicWeek[] = Array.isArray(data.topics_by_week)
+    ? (data.topics_by_week as unknown[]).map((t, i) => {
+        if (t && typeof t === 'object') return t as SyllabusTopicWeek;
+        return { week: i + 1, topic: String(t) };
+      })
+    : [];
+
+  const exams: SyllabusExamDate[] = Array.isArray(data.exam_dates)
+    ? (data.exam_dates as unknown[]).map((e) => {
+        if (e && typeof e === 'object') return e as SyllabusExamDate;
+        return { name: String(e), date: '' };
+      })
+    : [];
   const grading =
     data.grading_breakdown && typeof data.grading_breakdown === 'object' && !Array.isArray(data.grading_breakdown)
       ? (data.grading_breakdown as Record<string, string>)
       : null;
-  const assignments = Array.isArray(data.assignments)
-    ? data.assignments
-    : data.assignments && typeof data.assignments === 'object'
-      ? Object.entries(data.assignments as Record<string, string>).map(([key, value]) => `${key}: ${value}`)
-      : [];
+  // Assignments can be: string[], object[], or a key→value record
+  const assignments: string[] = (() => {
+    if (!data.assignments) return [];
+    if (Array.isArray(data.assignments)) {
+      return (data.assignments as unknown[]).map((a) => {
+        if (typeof a === 'string') return a;
+        if (a && typeof a === 'object') {
+          const obj = a as Record<string, unknown>;
+          // Handle {name, weight, due_date} shape from Gemini
+          const parts = [obj.name, obj.weight, obj.due_date].filter(Boolean);
+          return parts.length ? parts.join(' · ') : JSON.stringify(obj);
+        }
+        return String(a);
+      });
+    }
+    if (typeof data.assignments === 'object') {
+      return Object.entries(data.assignments as Record<string, string>).map(
+        ([key, value]) => `${key}: ${value}`,
+      );
+    }
+    return [];
+  })();
 
   return (
     <div className="space-y-5">

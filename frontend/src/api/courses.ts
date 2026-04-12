@@ -26,3 +26,19 @@ export async function saveCourse(course: CourseSearchResult) {
   const { data } = await apiClient.post<SavedCourse>('/api/courses/save', course);
   return data;
 }
+
+export interface UpdateCoursePayload {
+  course_name?: string;
+  course_number?: string;
+  professor?: string;
+  semester?: string;
+}
+
+export async function updateCourse(courseId: string, payload: UpdateCoursePayload) {
+  const { data } = await apiClient.put<SavedCourse>(`/api/courses/saved/${courseId}`, payload);
+  return data;
+}
+
+export async function deleteCourse(courseId: string) {
+  await apiClient.delete(`/api/courses/saved/${courseId}`);
+}
