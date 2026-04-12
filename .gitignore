@@ -36,3 +36,7 @@ frontend/.vite/
 
 # OS
 Thumbs.db
+
+# Markdown (except README)
+*.md
+!README.md
