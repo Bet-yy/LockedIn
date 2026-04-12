@@ -218,7 +218,65 @@ uvicorn app.main:app --port 8000
 
 ## Current Status
 
-### Phase 5 - Frontend Scaffolding
+### Phase 6-9 - Frontend Feature Implementation
+
+### Files Added
+```
+frontend/src/components/
+|-- CourseSearch/
+|   |-- SearchBar.tsx
+|   |-- SearchResultCard.tsx
+|   `-- SearchResults.tsx
+|-- Resources/
+|   |-- ResourceCard.tsx
+|   `-- ResourcesPanel.tsx
+|-- StudyPlan/
+|   |-- StudyPlanPanel.tsx
+|   `-- WeeklyPlanCard.tsx
+|-- Syllabus/
+|   |-- ParsedSyllabusCard.tsx
+|   `-- SyllabusPanel.tsx
+|-- Tasks/
+|   |-- TaskFilters.tsx
+|   |-- TaskForm.tsx
+|   |-- TaskItem.tsx
+|   `-- TaskList.tsx
+|-- Timer/
+|   |-- PomodoroTimer.tsx
+|   |-- TimerControls.tsx
+|   `-- TimerSettings.tsx
+`-- shared/
+    |-- EmptyState.tsx
+    |-- ErrorBanner.tsx
+    |-- LoadingSpinner.tsx
+    `-- Modal.tsx
+```
+
+### Files Updated
+```
+frontend/src/pages/HomePage.tsx
+frontend/src/pages/CoursePage.tsx
+frontend/src/pages/TasksPage.tsx
+frontend/src/pages/TimerPage.tsx
+frontend/src/store/courseStore.ts
+frontend/src/store/taskStore.ts
+frontend/src/store/timerStore.ts
+frontend/src/types/course.ts
+frontend/src/types/studyPlan.ts
+```
+
+### What Was Implemented
+- Phase 6: Replaced the placeholder home route with a live debounced course search flow backed by `GET /api/courses/search`.
+- Phase 6: Added saved-course hydration on page load and course save -> navigate behavior for `/course/:id`.
+- Phase 7: Replaced the placeholder course page with tabbed Syllabus, Study Plan, and Resources panels.
+- Phase 7: Added lazy loading of stored syllabus, study plan, and resource data when a saved course workspace is reopened.
+- Phase 7: Added manual syllabus text fallback UI for missing or unusable syllabus sources.
+- Phase 9: Replaced the tasks placeholder with full task create, edit, delete, complete, and filter flows.
+- Phase 9: Added course-linked tasks and modal-based editing using the existing backend CRUD routes.
+- Phase 8: Replaced the timer placeholder with a working Pomodoro UI, timer controls, persisted settings, and rollover logic.
+- Phase 8: Added browser notification support for session completion when permission is granted.
+- Added shared loading, empty, error, and modal components to keep feature pages visually and behaviorally consistent.
+- Expanded Zustand stores so course workspace data, task filtering state, and timer persistence are managed centrally instead of per-page.
 
 ### Files Created
 ```
@@ -281,7 +339,8 @@ frontend/
 ### Verification Notes
 - Frontend source scaffold created successfully in `frontend/`.
 - Dependency install could not be completed in this environment because `node` and `npm` are not installed or not available on `PATH`.
-- Build/dev verification is pending until Node.js is available.
+- Build/dev verification is still pending until Node.js is available.
+- Backend API integration is assumed from the previously passing backend route tests; the new frontend flows were matched to those route shapes.
 
 ### Done
 - [x] Backend scaffolded (FastAPI + all routes)
@@ -291,12 +350,15 @@ frontend/
 - [x] Tasks CRUD
 - [x] All 13 backend tests passing
 - [x] Phase 5: Frontend scaffold (Vite-style app shell, Tailwind config, routing, Zustand, API layer)
+- [x] Phase 6: Course search UI
+- [x] Phase 7: CoursePage workspace (syllabus, study plan, resources tabs)
+- [x] Phase 8: Pomodoro timer
+- [x] Phase 9: To-do list
 
 ### Next Up
-- [ ] Phase 6: Course search UI
-- [ ] Phase 7: CoursePage (syllabus, study plan, resources tabs)
-- [ ] Phase 8: Pomodoro Timer
-- [ ] Phase 9: To-Do List
+- [ ] Install frontend dependencies once Node.js is available
+- [ ] Run `npm run build` and fix any TypeScript or styling regressions
+- [ ] Manually verify the frontend against the checklist in `PLAN.md`
 
 ---
 

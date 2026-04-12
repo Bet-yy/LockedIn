@@ -243,6 +243,185 @@ Zustand `timerStore`:
 
 ---
 
+## Remaining Phases — Execution Plan
+
+### Current Status
+
+- Phase 1 — Backend scaffolding: complete
+- Phase 2 — Nebula API integration: complete
+- Phase 3 — Gemini AI integration: complete
+- Phase 4 — Tasks CRUD: complete
+- Phase 5 — Frontend scaffolding: complete
+
+The remaining work is now concentrated in the frontend. The API layer, guest-mode request handling, page routes, and baseline Zustand stores already exist, so the best next step is to implement the user flows in file-sized chunks.
+
+### Recommended Build Order
+
+1. Phase 6 — Course Search UI
+2. Phase 7 — Course workspace tabs
+3. Phase 9 — To-do list
+4. Phase 8 — Pomodoro timer
+
+This order keeps the course flow contiguous, lets the tasks page reuse saved-course data, and leaves the isolated timer work for last.
+
+### Phase 6 — Course Search UI
+
+**Goal:** Make `frontend/src/pages/HomePage.tsx` the functional entry point for searching, saving, and selecting courses.
+
+**Files to add**
+- `frontend/src/components/CourseSearch/SearchBar.tsx`
+- `frontend/src/components/CourseSearch/SearchResults.tsx`
+- `frontend/src/components/CourseSearch/SearchResultCard.tsx`
+
+**Files to update**
+- `frontend/src/pages/HomePage.tsx`
+- `frontend/src/store/courseStore.ts`
+- `frontend/src/types/course.ts` if the result and saved-course UI need narrower render types
+
+**Tasks**
+- Wire `useDebounce` into the search field so `searchCourses()` fires after 300ms of inactivity.
+- Extend `courseStore` with `isSearching`, `searchError`, and `lastQuery`.
+- Guard against empty searches and stale async responses.
+- Render explicit loading, empty, and error states in the search panel.
+- On result click, call `saveCourse(course)`, update the store with `upsertSavedCourse`, then navigate to `/course/:id`.
+- Load `getSavedCourses()` on mount so recent or saved courses can be shown before a new search.
+
+**Done when**
+- Search results appear reliably after debounced typing.
+- Clicking a result saves the course and routes into the course workspace.
+- Returning to the home page still shows saved course context.
+
+### Phase 7 — CoursePage (tabbed workspace)
+
+**Goal:** Replace the placeholder course route with a real three-tab workflow for syllabus parsing, study-plan generation, and resources.
+
+**Files to add**
+- `frontend/src/components/Syllabus/SyllabusPanel.tsx`
+- `frontend/src/components/Syllabus/ParsedSyllabusCard.tsx`
+- `frontend/src/components/StudyPlan/StudyPlanPanel.tsx`
+- `frontend/src/components/StudyPlan/WeeklyPlanCard.tsx`
+- `frontend/src/components/Resources/ResourcesPanel.tsx`
+- `frontend/src/components/Resources/ResourceCard.tsx`
+
+**Files to update**
+- `frontend/src/pages/CoursePage.tsx`
+- `frontend/src/store/courseStore.ts`
+- `frontend/src/types/studyPlan.ts`
+
+**Store additions**
+- `selectedSavedCourse`
+- `syllabusByCourseId`
+- `studyPlanByCourseId`
+- `resourcesByCourseId`
+- tab-specific loading and error state keyed by course ID
+
+**Tasks**
+- Resolve the active course from the route param plus `savedCourses`; if store state is empty after refresh, fetch saved courses first.
+- Keep the active tab in local page state.
+- On first tab load, try the read endpoints before offering generation:
+  - `getSyllabus(courseId)`
+  - `getStudyPlan(courseId)`
+  - `getResources(courseId)`
+- Syllabus tab:
+  - Render parsed syllabus data into readable sections like topics, exams, grading, and description.
+  - Add manual raw-text fallback only when automatic parsing cannot succeed.
+- Study Plan tab:
+  - Add a `weeksAvailable` control with default `15`.
+  - Render one `WeeklyPlanCard` per week.
+- Resources tab:
+  - Allow optional topic override before generation.
+  - Show resource type badges and outbound links.
+
+**Done when**
+- Refreshing `/course/:id` can rehydrate the selected course and any previously generated content.
+- Each tab can load, generate, retry, and render independently.
+- Stored content is reused on revisit instead of being regenerated automatically.
+
+### Phase 8 — Pomodoro Timer
+
+**Goal:** Turn the timer scaffold into a complete client-side Pomodoro flow with persistence and notifications.
+
+**Files to add**
+- `frontend/src/components/Timer/PomodoroTimer.tsx`
+- `frontend/src/components/Timer/TimerControls.tsx`
+- `frontend/src/components/Timer/TimerSettings.tsx`
+
+**Files to update**
+- `frontend/src/pages/TimerPage.tsx`
+- `frontend/src/store/timerStore.ts`
+- `frontend/src/hooks/useInterval.ts` if a small API adjustment is needed
+
+**Store additions**
+- `setDurations`
+- `setSessionsCompleted`
+- `tick`
+- `reset`
+- `skipToNextMode`
+- localStorage hydrate and persist helpers
+
+**Tasks**
+- Persist `mode`, `secondsLeft`, `sessionsCompleted`, and duration settings in localStorage.
+- Use `useInterval` to decrement once per second while the timer is running.
+- Implement mode rollover:
+  - `work -> short_break` for normal cycles
+  - `work -> long_break` every fourth completed work session
+- Reset `secondsLeft` whenever the mode changes.
+- Add start, pause, reset, and skip controls.
+- Validate configurable durations so zero or negative values are impossible.
+- Request browser notification permission lazily and notify on session completion.
+
+**Done when**
+- Refreshing the page preserves timer settings and current progress.
+- Session rollover follows the expected 4-session Pomodoro cycle.
+- Reset always restores the correct duration for the active mode.
+
+### Phase 9 — To-Do List
+
+**Goal:** Build the complete tasks workflow on top of the existing task API wrappers and store.
+
+**Files to add**
+- `frontend/src/components/Tasks/TaskList.tsx`
+- `frontend/src/components/Tasks/TaskItem.tsx`
+- `frontend/src/components/Tasks/TaskForm.tsx`
+- `frontend/src/components/Tasks/TaskFilters.tsx`
+
+**Files to update**
+- `frontend/src/pages/TasksPage.tsx`
+- `frontend/src/store/taskStore.ts`
+- `frontend/src/store/courseStore.ts` for course dropdown reuse
+- `frontend/src/types/task.ts` if a separate form model helps
+
+**Store additions**
+- `isLoading`
+- `error`
+- `activeFilter`
+- `selectedCourseId`
+
+**Tasks**
+- Fetch all tasks on mount with `listTasks()`.
+- Load saved courses for the optional course assignment dropdown.
+- Use one shared `TaskForm` for both create and edit flows.
+- After create and patch calls, update the store with `upsertTask`.
+- Add completion toggle, delete action, and inline status feedback.
+- Implement filters:
+  - `all`
+  - `completed`
+  - `due_today`
+  - `course`
+- Keep filtering logic in the page or store layer rather than duplicating filtered arrays in child components.
+
+**Done when**
+- Create, edit, complete, and delete all persist correctly and refresh the UI immediately after successful responses.
+- Filters work against backend-backed data.
+- Tasks can optionally be linked to saved courses for future course-specific views.
+
+### Cross-Phase Cleanup
+
+- Add consistent shared loading, error, and empty-state components if the current shared set is too minimal.
+- Replace `unknown` syllabus payloads with typed frontend models once the final display shape is stable.
+- Update `DEVLOG.md` after each finished phase so implementation status stays aligned with the repo.
+- Once Node.js is available, run `npm install` and `npm run build` in `frontend/` before calling the frontend complete.
+
 ## Frontend–Backend Integration Map
 
 | User Action | API Call | Stored In |

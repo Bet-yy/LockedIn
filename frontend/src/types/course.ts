@@ -18,3 +18,7 @@ export interface SavedCourse {
   syllabus_parsed: unknown;
   created_at: string | null;
 }
+
+export function isSavedCourse(course: CourseSearchResult | SavedCourse | null): course is SavedCourse {
+  return Boolean(course && 'id' in course);
+}
