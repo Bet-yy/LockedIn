@@ -218,6 +218,71 @@ uvicorn app.main:app --port 8000
 
 ## Current Status
 
+### Phase 5 - Frontend Scaffolding
+
+### Files Created
+```
+frontend/
+|-- .env.example
+|-- .gitignore
+|-- index.html
+|-- package.json
+|-- postcss.config.js
+|-- tailwind.config.js
+|-- tsconfig.app.json
+|-- tsconfig.json
+|-- tsconfig.node.json
+|-- vite.config.ts
+`-- src/
+    |-- App.tsx
+    |-- main.tsx
+    |-- styles.css
+    |-- vite-env.d.ts
+    |-- api/
+    |   |-- client.ts
+    |   |-- courses.ts
+    |   |-- studyPlan.ts
+    |   |-- syllabus.ts
+    |   `-- tasks.ts
+    |-- components/shared/
+    |   |-- AppShell.tsx
+    |   |-- Navbar.tsx
+    |   |-- PageIntro.tsx
+    |   `-- StatusCard.tsx
+    |-- hooks/
+    |   |-- useDebounce.ts
+    |   `-- useInterval.ts
+    |-- pages/
+    |   |-- CoursePage.tsx
+    |   |-- HomePage.tsx
+    |   |-- TasksPage.tsx
+    |   `-- TimerPage.tsx
+    |-- store/
+    |   |-- courseStore.ts
+    |   |-- taskStore.ts
+    |   `-- timerStore.ts
+    |-- types/
+    |   |-- course.ts
+    |   |-- studyPlan.ts
+    |   `-- task.ts
+    `-- utils/
+        `-- guest.ts
+```
+
+### What Was Implemented
+- Added a Vite + React + TypeScript frontend workspace with Tailwind and PostCSS configuration.
+- Set up React Router routes for `/`, `/course/:id`, `/tasks`, and `/timer`.
+- Built a shared `Navbar` and `AppShell` layout so all feature pages already sit inside a consistent UI shell.
+- Added typed API wrappers for courses, syllabus, study plans, resources, and tasks against the existing FastAPI routes.
+- Added guest mode persistence via `localStorage` and an Axios interceptor that appends `guest_id` to API requests automatically.
+- Added foundational Zustand stores for courses, tasks, and timer state.
+- Added starter hooks (`useDebounce`, `useInterval`) and scaffold pages for Home, Course, Tasks, and Timer flows.
+
+### Verification Notes
+- Frontend source scaffold created successfully in `frontend/`.
+- Dependency install could not be completed in this environment because `node` and `npm` are not installed or not available on `PATH`.
+- Build/dev verification is pending until Node.js is available.
+
 ### Done
 - [x] Backend scaffolded (FastAPI + all routes)
 - [x] Nebula API integration (course search, sections, professor resolution, syllabus fetch)
@@ -225,9 +290,9 @@ uvicorn app.main:app --port 8000
 - [x] Supabase integration (all CRUD operations)
 - [x] Tasks CRUD
 - [x] All 13 backend tests passing
+- [x] Phase 5: Frontend scaffold (Vite-style app shell, Tailwind config, routing, Zustand, API layer)
 
 ### Next Up
-- [ ] Phase 5: Scaffold frontend (Vite + React + TS + Tailwind + Zustand)
 - [ ] Phase 6: Course search UI
 - [ ] Phase 7: CoursePage (syllabus, study plan, resources tabs)
 - [ ] Phase 8: Pomodoro Timer
