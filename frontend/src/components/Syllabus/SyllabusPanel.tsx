@@ -23,40 +23,42 @@ export function SyllabusPanel({ course, syllabus, isLoading, error, onParse }: S
   const hasParsedSyllabus = isObject(syllabus?.syllabus_parsed);
 
   return (
-    <div className="space-y-6">
-      <section className="glass-panel p-6">
+    <div className="space-y-5">
+      <section className="glass-panel p-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <p className="section-label">Syllabus Parsing</p>
-            <h2 className="mt-3 font-display text-2xl font-semibold text-sand-100">Build a readable course brief</h2>
-            <p className="mt-3 max-w-2xl text-sm leading-7 text-sand-200/74">
-              Pull the syllabus into structured sections so students can skim the semester, deadlines, and course expectations without reading the full PDF every time.
+            <h2 className="mt-1 font-display text-lg font-semibold text-gray-900">Build a readable course brief</h2>
+            <p className="mt-1 max-w-2xl text-sm text-gray-500">
+              Pull the syllabus into structured sections so you can skim deadlines and expectations at a glance.
             </p>
           </div>
           <button
             type="button"
             onClick={() => void onParse(manualText.trim() || undefined)}
             disabled={isLoading}
-            className="rounded-full bg-coral-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-coral-400 disabled:cursor-not-allowed disabled:opacity-60"
+            className="rounded-xl bg-violet-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {hasParsedSyllabus ? 'Re-parse Syllabus' : 'Parse Syllabus'}
           </button>
         </div>
-        <div className="mt-5 flex flex-wrap gap-3 text-sm text-sand-200/70">
-          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-2">{course.syllabus_raw ? 'Raw syllabus cached' : 'No raw syllabus cached yet'}</span>
-          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-2">
+        <div className="mt-4 flex flex-wrap gap-2">
+          <span className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-1.5 text-xs font-medium text-gray-500">
+            {course.syllabus_raw ? 'Raw syllabus cached' : 'No raw syllabus cached yet'}
+          </span>
+          <span className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-1.5 text-xs font-medium text-gray-500">
             {course.syllabus_parsed ? 'Parsed syllabus found' : 'Needs parsing'}
           </span>
         </div>
       </section>
 
-      {isLoading ? (
+      {isLoading && (
         <div className="glass-panel p-6">
-          <LoadingSpinner label="Parsing syllabus and saving the structured result..." />
+          <LoadingSpinner label="Parsing syllabus…" />
         </div>
-      ) : null}
+      )}
 
-      {error ? <ErrorBanner message={error} /> : null}
+      {error && <ErrorBanner message={error} />}
 
       {hasParsedSyllabus ? (
         <ParsedSyllabusCard data={syllabus?.syllabus_parsed as ParsedSyllabusData} />
@@ -67,22 +69,22 @@ export function SyllabusPanel({ course, syllabus, isLoading, error, onParse }: S
         />
       )}
 
-      <section className="glass-panel p-6">
+      <section className="glass-panel p-5">
         <div className="flex items-center justify-between gap-4">
           <div>
             <p className="section-label">Manual Fallback</p>
-            <h3 className="mt-3 font-display text-xl font-semibold text-sand-100">Paste syllabus text if the PDF is missing</h3>
+            <h3 className="mt-1 font-display text-base font-semibold text-gray-900">Paste syllabus text if the PDF is missing</h3>
           </div>
-          <span className="rounded-full border border-cyan-300/20 bg-cyan-400/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-200">
+          <span className="rounded-lg border border-violet-200 bg-violet-50 px-2.5 py-1 text-xs font-semibold text-violet-600">
             Optional
           </span>
         </div>
         <textarea
           value={manualText}
-          onChange={(event) => setManualText(event.target.value)}
-          rows={10}
+          onChange={(e) => setManualText(e.target.value)}
+          rows={8}
           placeholder="Paste syllabus text here if Nebula cannot provide a usable syllabus file."
-          className="mt-5 w-full rounded-[1.5rem] border border-white/10 bg-ink-950/75 px-4 py-4 text-sm leading-7 text-sand-100 outline-none placeholder:text-sand-200/45"
+          className="mt-4 w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm leading-6 text-gray-800 outline-none placeholder:text-gray-400 focus:border-violet-400 focus:ring-2 focus:ring-violet-100"
         />
       </section>
     </div>

@@ -221,16 +221,18 @@ export function CoursePage() {
         }
       />
 
-      <section className="glass-panel p-4">
-        <div className="flex flex-wrap gap-3">
+      <section className="glass-panel overflow-hidden">
+        <div className="flex border-b border-gray-100">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               type="button"
               onClick={() => setActiveTab(tab.id)}
               className={[
-                'rounded-full px-4 py-2 text-sm font-medium transition',
-                activeTab === tab.id ? 'bg-cyan-400 text-ink-950' : 'bg-white/5 text-sand-100/72 hover:bg-white/10',
+                'flex-1 py-3 text-sm font-semibold uppercase tracking-wide transition',
+                activeTab === tab.id
+                  ? 'border-b-2 border-violet-600 text-violet-700'
+                  : 'text-gray-400 hover:text-gray-600',
               ].join(' ')}
             >
               {tab.label}

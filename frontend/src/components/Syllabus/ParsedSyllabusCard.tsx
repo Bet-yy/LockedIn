@@ -6,9 +6,9 @@ interface ParsedSyllabusCardProps {
 
 function renderObjectList(items: Record<string, string>) {
   return Object.entries(items).map(([label, value]) => (
-    <div key={label} className="flex items-center justify-between gap-4 rounded-2xl border border-white/8 bg-white/[0.03] px-4 py-3 text-sm">
-      <span className="text-sand-100">{label}</span>
-      <span className="text-sand-200/70">{value}</span>
+    <div key={label} className="flex items-center justify-between gap-4 rounded-xl border border-gray-100 bg-gray-50 px-4 py-2.5 text-sm">
+      <span className="font-medium text-gray-700">{label}</span>
+      <span className="text-gray-500">{value}</span>
     </div>
   ));
 }
@@ -27,66 +27,66 @@ export function ParsedSyllabusCard({ data }: ParsedSyllabusCardProps) {
       : [];
 
   return (
-    <div className="space-y-6">
-      {data.course_description ? (
-        <section className="glass-panel p-6">
+    <div className="space-y-5">
+      {data.course_description && (
+        <section className="glass-panel p-5">
           <p className="section-label">Description</p>
-          <p className="mt-4 text-sm leading-7 text-sand-200/78">{data.course_description}</p>
+          <p className="mt-3 text-sm leading-6 text-gray-600">{data.course_description}</p>
         </section>
-      ) : null}
+      )}
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        <section className="glass-panel p-6">
+      <div className="grid gap-5 lg:grid-cols-2">
+        <section className="glass-panel p-5">
           <p className="section-label">Topics By Week</p>
-          <div className="mt-4 space-y-3">
+          <div className="mt-3 space-y-2">
             {topics.length ? (
               topics.map((item, index) => (
-                <div key={`${item.week}-${item.topic}-${index}`} className="rounded-2xl border border-white/8 bg-white/[0.03] px-4 py-3">
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-300/85">Week {item.week}</p>
-                  <p className="mt-2 text-sm text-sand-100">{item.topic}</p>
+                <div key={`${item.week}-${item.topic}-${index}`} className="rounded-xl border border-gray-100 bg-gray-50 px-4 py-3">
+                  <p className="text-[10px] font-semibold uppercase tracking-wide text-violet-500">Week {item.week}</p>
+                  <p className="mt-1 text-sm text-gray-700">{item.topic}</p>
                 </div>
               ))
             ) : (
-              <p className="text-sm text-sand-200/68">No weekly topic outline was returned.</p>
+              <p className="text-sm text-gray-400">No weekly topic outline was returned.</p>
             )}
           </div>
         </section>
 
-        <section className="space-y-6">
-          <div className="glass-panel p-6">
+        <section className="space-y-5">
+          <div className="glass-panel p-5">
             <p className="section-label">Exam Dates</p>
-            <div className="mt-4 space-y-3">
+            <div className="mt-3 space-y-2">
               {exams.length ? (
                 exams.map((item) => (
-                  <div key={`${item.name}-${item.date}`} className="rounded-2xl border border-white/8 bg-white/[0.03] px-4 py-3">
-                    <p className="text-sm font-semibold text-sand-100">{item.name}</p>
-                    <p className="mt-1 text-sm text-sand-200/68">{item.date}</p>
+                  <div key={`${item.name}-${item.date}`} className="rounded-xl border border-gray-100 bg-gray-50 px-4 py-3">
+                    <p className="text-sm font-semibold text-gray-800">{item.name}</p>
+                    <p className="mt-0.5 text-xs text-gray-500">{item.date}</p>
                   </div>
                 ))
               ) : (
-                <p className="text-sm text-sand-200/68">No exam schedule was extracted.</p>
+                <p className="text-sm text-gray-400">No exam schedule was extracted.</p>
               )}
             </div>
           </div>
 
-          <div className="glass-panel p-6">
+          <div className="glass-panel p-5">
             <p className="section-label">Grading Breakdown</p>
-            <div className="mt-4 space-y-3">
-              {grading ? renderObjectList(grading) : <p className="text-sm text-sand-200/68">No grading weights were extracted.</p>}
+            <div className="mt-3 space-y-2">
+              {grading ? renderObjectList(grading) : <p className="text-sm text-gray-400">No grading weights were extracted.</p>}
             </div>
           </div>
 
-          <div className="glass-panel p-6">
+          <div className="glass-panel p-5">
             <p className="section-label">Assignments</p>
-            <div className="mt-4 space-y-2">
+            <div className="mt-3 space-y-2">
               {assignments.length ? (
                 assignments.map((assignment) => (
-                  <div key={assignment} className="rounded-2xl border border-white/8 bg-white/[0.03] px-4 py-3 text-sm text-sand-200/78">
+                  <div key={assignment} className="rounded-xl border border-gray-100 bg-gray-50 px-4 py-2.5 text-sm text-gray-600">
                     {assignment}
                   </div>
                 ))
               ) : (
-                <p className="text-sm text-sand-200/68">No assignments list was extracted.</p>
+                <p className="text-sm text-gray-400">No assignments list was extracted.</p>
               )}
             </div>
           </div>
