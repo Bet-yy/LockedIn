@@ -1,3 +1,11 @@
+## WeHack Hackathon Project – First Place (The Nebula Wing Track)
+
+Built this in 36 hours during WeHack 2026
+
+- 🥇 Won **1st Place – [The Nebula Wing Track]**
+- 🔗 Devlog: [Read our devlog]([link-here](https://devpost.com/software/lockedin-mdq2wg?ref_content=my-projects-tab&ref_feature=my_projects))
+
+
 # LockedIn
 
 > UTD students get a syllabus on day one and no clear plan. LockedIn fixes that.
