@@ -4,6 +4,7 @@ Built this in 36 hours during WeHack 2026
 
 - 🥇 Won **1st Place – [The Nebula Wing Track]**
 - 🔗 Devlog: https://devpost.com/software/lockedin-mdq2wg?ref_content=my-projects-tab&ref_feature=my_projects
+- 🎥 Demo Video: https://youtu.be/8pxxn-QZgyA
 
 
 # LockedIn
