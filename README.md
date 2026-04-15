@@ -146,5 +146,5 @@ Built at WEHack 2026 by:
 
 - **Beatriz Espinoza** — Frontend
 - **Meenakshi Choppa** — Backend and Frontend
-- **Zainab Qadar** — Design
-- **Ananya Swaminathan** — Design
+- **Zainab Qadar** — Marketing and Design
+- **Ananya Swaminathan** — Product Designer (Prototyping & Ideation)
